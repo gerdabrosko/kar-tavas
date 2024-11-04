@@ -135,11 +135,11 @@ def display_hangman(tries):
     return stages[tries]
 
 def main():
-    word = get_word()
-    play(word)
+    word_list = get_word()
+    play(word_list)
     while input("Vēlies mēģināt vēlreiz? (Y/N) ").upper() == "Y":
-        word = get_word()
-        play(word)
+        word_list = get_word()
+        play(word_list)
 
 if __name__ == "__main__":
     main()
