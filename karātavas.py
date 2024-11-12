@@ -1,145 +1,99 @@
-import random  
-from words import word_list
+# Gerda Brosko 12.b, darbs- Karātavas
 
-def get_word():
-    word = random.choice(word_list)
-    return word.upper()
-def play(word):
-    word_completion = "_" * len(word)
-    guessed = False 
-    guessed_letters = []
-    guessed_words = []
-    tries = 5
-    print("Spēlējam karātavas!")
-    print(display_hangman(tries))
-    new_func(word_completion)
-    print("\n")
-    
-    while not guessed and tries > 0:
-        guess = input("Mini vienu burtu vai vārdu: ").upper()
-        if len(guess) == 1 and guess.isalpha():
-            if guess in guessed_letters:
-                print("Jau minēji šo burtu:", guess)
-            elif guess not in word:
-                print(guess, "nav vārdā.")
-                tries -= 1
-                guessed_letters.append(guess)
-            else:
-                print("Malacis,", guess, "ir vārdā!")
-                guessed_letters.append(guess)
-                word_as_list = list(word_completion)
-                indices = [i for i, letter in enumerate(word) if letter == guess]
-                for index in indices:
-                    word_as_list[index] = guess
-                word_completion = "".join(word_as_list)
-                if "_" not in word_completion:
-                    guessed = True
-        elif len(guess) == len(word) and guess.isalpha():
-            if guess in guessed_words:
-                print(guess, "ir vārds, kuru jau minēji.")
-            elif guess != word:
-                print(guess, "nav šis vārds.")
-                tries -= 1
-                guessed_words.append(guess)
-            else:
-                guessed = True
-                word_completion = word
-        else:
-            print("Nav pareizs minējums.")
+import random
+
+# Vārdu saraksts, no kura tiek izvēlēts nejaušs vārds
+vārdu_saraksts = [
+    'suns', 'kaķis', 'zivs', 'lapa', 'zils', 'zaļš', 'sarkans', 
+    'gulēt', 'ēst', 'mašīnas', 'skola', 'lekt', 'lietussargs', 
+    'tukums', 'liepāja', 'ventspils', 'krāslava', 'dejot', 'dziedāt'
+]
+
+# Karātavu zīmējums atkarībā no nepareizo minējumu skaita
+cilvēciņa_zīmējums = {
+    0: (" o ", "   ", "   "),
+    1: (" o ", " | ", "   "),
+    2: (" o ", "/| ", "   "),
+    3: (" o ", "/|\\", "   "),
+    4: (" o ", "/|\\", "/  "),
+    5: (" o ", "/|\\", "/ \\")
+}
+
+# Funkcija, lai attēlotu cilvēciņu atkarībā no nepareizo minējumu skaita
+def parādīt_cilvēciņu(nepareizās_minējumi):
+    print("**")
+    for rinda in cilvēciņa_zīmējums.get(nepareizās_minējumi, []):
+        print(rinda)
+    print("**")
         
-        print(display_hangman(tries))
-        print(word_completion)
-        print("\n")
+# Funkcija, lai parādītu pašreizējo norādi uzminētajiem burtiem
+def parādīt_norādi(vārds, uzminēts_pareizi):
+    norāde = [burts if burts in uzminēts_pareizi else "_" for burts in vārds]
+    print(" ".join(norāde))
+
+# Galvenā spēles funkcija
+def karātavu_spēle():
+    vārds = random.choice(vārdu_saraksts)  # Nejauša vārda izvēle
+    uzminēts_pareizi = set()  # Burti, kas minēti pareizi
+    uzminēts_nepareizi = set()  # Burti, kas minēti nepareizi
+    mēģinājumi = 6  # Spēlētājam ir 6 mēģinājumi
     
-    if guessed:
-        print("Malacis, tu uzminēji vārdu!")
+    print("Laipni lūgti karātavu spēlē!")
+    
+    # Spēles cikls turpinās līdz uzvarai vai zaudējumam
+    while mēģinājumi > 0:
+        parādīt_cilvēciņu(len(uzminēts_nepareizi))  # Parāda cilvēciņu atkarībā no kļūdu skaita
+        parādīt_norādi(vārds, uzminēts_pareizi)  # Parāda pašreizējo vārda stāvokli
+
+        # Spēlētāja minējums
+        minējums = input("Miniet burtu: ").lower()
+
+        if len(minējums) != 1 or not minējums.isalpha():
+            print("Lūdzu, ievadiet tikai vienu burtu.")
+            continue
+
+        if minējums in uzminēts_pareizi or minējums in uzminēts_nepareizi:
+            print("Šis burts jau ir minēts. Mēģiniet vēlreiz.")
+            continue
+
+        # Pārbauda, vai minējums ir pareizs
+        if minējums in vārds:
+            uzminēts_pareizi.add(minējums)
+            print(f"Labi! Burts '{minējums}' ir vārdā.")
+        else:
+            uzminēts_nepareizi.add(minējums)
+            mēģinājumi -= 1
+            print(f"Nav pareizi! Burts '{minējums}' nav vārdā. Atliek {mēģinājumi} mēģinājumi.")
+
+        # Pārbauda, vai spēlētājs ir uzminējis visu vārdu
+        if set(vārds) == uzminēts_pareizi:
+            print("Apsveicu! Jūs uzminējāt vārdu!")
+            parādīt_norādi(vārds, uzminēts_pareizi)
+            break
+
     else:
-        print("Tu neuzminēji. Vārds bija " + word + ". Varbūt nākamreiz!")
+        print("Spēle beigusies! Jūs iztērējāt visus mēģinājumus.")
+        print(f"Pareizais vārds bija: {vārds}")
 
-def new_func(word_completion):
-    print(word_completion)
+# Funkcija, kas dod iespēju spēlēt vēlreiz
+def spēlēt_atkal():
+    while True:
+        atbilde = input("Vai vēlaties spēlēt vēlreiz? (jā/nē): ").lower()
+        if atbilde == "jā":
+            return True
+        elif atbilde == "nē":
+            return False
+        else:
+            print("Lūdzu, ievadiet 'jā' vai 'nē'.")
 
-def display_hangman(tries):
-    stages = [
-        """
-              -------------
-              |            |
-              |            O
-              |           \|/
-              |            |
-              |           / \\
-              |
-             / \\
-        """,
-        """
-              -------------
-              |            |
-              |            O
-              |           \|/
-              |            |
-              |           / 
-              |
-             / \\
-        """,
-        """
-              -------------
-              |            |
-              |            O
-              |           \|/
-              |            |
-              |            
-              |
-             / \\
-        """,
-        """
-              -------------
-              |            |
-              |            O
-              |           \|/
-              |            
-              |            
-              |
-             / \\
-        """,
-        """
-              -------------
-              |            |
-              |            O
-              |            |
-              |            
-              |            
-              |
-             / \\
-        """,
-        """
-              -------------
-              |            |
-              |            O
-              |            
-              |            
-              |            
-              |
-             / \\
-        """,
-        """
-              -------------
-              |            |
-              |            
-              |            
-              |            
-              |            
-              |
-             / \\
-        """
-    ]
-    return stages[tries]
-
-def main():
-    word_list = get_word()
-    play(word_list)
-    while input("Vēlies mēģināt vēlreiz? (Y/N) ").upper() == "Y":
-        word_list = get_word()
-        play(word_list)
+# Galvenā programma
+def galvenā_funkcija():
+    while True:
+        karātavu_spēle()  # Izsauc spēles funkciju
+        if not spēlēt_atkal():
+            print("Paldies, ka spēlējāt! Uz redzēšanos!")
+            break
 
 if __name__ == "__main__":
-    main()
+    galvenā_funkcija()
+
