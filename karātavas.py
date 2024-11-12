@@ -1,4 +1,13 @@
 # Gerda Brosko 12.b, darbs- Karātavas
+#Mērķis: izveidot karātavu spēli Python programmēšanas valodā, apgūstot Python pamata funkcijas un loģiku.1
+#Svarīgākie punkti:
+#Nejauša vārda atlase: Izveidot vārdu sarakstu un atlasīt nejaušu vārdu spēlei, izmantojot random.choice() funkciju.
+#Spēles datu saglabāšana: Izveidot divus sarakstus vai kopas (uzminēts_pareizi un uzminēts_nepareizi), lai saglabātu pareizos un nepareizos minējumus.
+#Minējumu pārvaldība: Dot spēlētājam noteiktu minējumu skaitu (piemēram, 6), kas samazinās ar katru kļūdu. Nodrošināt, lai spēlētājs var ievadīt tikai vienu burtu, pārbaudot, vai ievadītais simbols ir burts un nav atkārtots.
+#Pareizo un nepareizo minējumu attēlojums: Parādīt vārda pašreizējo norādi, aizvietojot pareizi minētos burtus, bet neatklātos attēlot ar _. Nepareizu minējumu gadījumā pakāpeniski attēlot "cilvēciņa" zīmējumu, kas simbolizē karātavas.
+#Uzvaras un zaudējuma nosacījumi: Nodrošināt uzvaru, ja spēlētājs uzmin visus vārda burtus pirms mēģinājumi beidzas, un zaudējumu, ja mēģinājumi iztērēti pirms viss vārds uzminēts.
+#Spēles atkārtošanas iespēja: Pēc uzvaras vai zaudējuma piedāvāt iespēju spēlēt vēlreiz vai izbeigt spēli.
+#Lietotāja pieredze: Nodrošināt skaidrus paziņojumus par pareizajiem un nepareizajiem minējumiem un atlikušajiem mēģinājumiem, lai spēlētājam būtu skaidrs, cik burti vēl jāuzmin un cik kļūdu drīkst pieļaut.
 
 import random
 
@@ -38,7 +47,7 @@ def karātavu_spēle():
     uzminēts_nepareizi = set()  # Burti, kas minēti nepareizi
     mēģinājumi = 6  # Spēlētājam ir 6 mēģinājumi
     
-    print("Laipni lūgti karātavu spēlē!")
+    print("Uzspēlējam karātavas!")
     
     # Spēles cikls turpinās līdz uzvarai vai zaudējumam
     while mēģinājumi > 0:
@@ -46,52 +55,52 @@ def karātavu_spēle():
         parādīt_norādi(vārds, uzminēts_pareizi)  # Parāda pašreizējo vārda stāvokli
 
         # Spēlētāja minējums
-        minējums = input("Miniet burtu: ").lower()
+        minējums = input("Mini burtu ").lower()
 
         if len(minējums) != 1 or not minējums.isalpha():
-            print("Lūdzu, ievadiet tikai vienu burtu.")
+            print("Lūdzu, ievadi vienu burtu!")
             continue
 
         if minējums in uzminēts_pareizi or minējums in uzminēts_nepareizi:
-            print("Šis burts jau ir minēts. Mēģiniet vēlreiz.")
+            print("Šis burts jau ir minēts. Mēģini vēlreiz.")
             continue
 
         # Pārbauda, vai minējums ir pareizs
         if minējums in vārds:
             uzminēts_pareizi.add(minējums)
-            print(f"Labi! Burts '{minējums}' ir vārdā.")
+            print(f"Pareizi, minētais burts '{minējums}' ir vārdā.")
         else:
             uzminēts_nepareizi.add(minējums)
             mēģinājumi -= 1
-            print(f"Nav pareizi! Burts '{minējums}' nav vārdā. Atliek {mēģinājumi} mēģinājumi.")
+            print(f"Ne pareizi, minētais burts '{minējums}' nav vārdā. Tev atliek {mēģinājumi} mēģinājumi.")
 
         # Pārbauda, vai spēlētājs ir uzminējis visu vārdu
         if set(vārds) == uzminēts_pareizi:
-            print("Apsveicu! Jūs uzminējāt vārdu!")
+            print("Malacis, tu atminēji!")
             parādīt_norādi(vārds, uzminēts_pareizi)
             break
 
     else:
-        print("Spēle beigusies! Jūs iztērējāt visus mēģinājumus.")
+        print("Spēles beigas! (Iztērēji visus mēģinājumus.)")
         print(f"Pareizais vārds bija: {vārds}")
 
 # Funkcija, kas dod iespēju spēlēt vēlreiz
 def spēlēt_atkal():
     while True:
-        atbilde = input("Vai vēlaties spēlēt vēlreiz? (jā/nē): ").lower()
+        atbilde = input("Vai vēlaties mēģināt vēlreiz? (jā/nē): ").lower()
         if atbilde == "jā":
             return True
         elif atbilde == "nē":
             return False
         else:
-            print("Lūdzu, ievadiet 'jā' vai 'nē'.")
+            print("Lūdzu, ievadi 'jā' vai 'nē'.")
 
 # Galvenā programma
 def galvenā_funkcija():
     while True:
         karātavu_spēle()  # Izsauc spēles funkciju
         if not spēlēt_atkal():
-            print("Paldies, ka spēlējāt! Uz redzēšanos!")
+            print("Laba spēle! Līdz nākamajai reizei!")
             break
 
 if __name__ == "__main__":
