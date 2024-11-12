@@ -55,7 +55,7 @@ def karātavu_spēle():
         parādīt_norādi(vārds, uzminēts_pareizi)  # Parāda pašreizējo vārda stāvokli
 
         # Spēlētāja minējums
-        minējums = input("Mini burtu ").lower()
+        minējums = input("Mini burtu ! ").lower()
 
         if len(minējums) != 1 or not minējums.isalpha():
             print("Lūdzu, ievadi vienu burtu!")
@@ -72,7 +72,7 @@ def karātavu_spēle():
         else:
             uzminēts_nepareizi.add(minējums)
             mēģinājumi -= 1
-            print(f"Ne pareizi, minētais burts '{minējums}' nav vārdā. Tev atliek {mēģinājumi} mēģinājumi.")
+            print(f"Nepareizi, minētais burts '{minējums}' nav vārdā. Tev atliek {mēģinājumi} mēģinājumi.")
 
         # Pārbauda, vai spēlētājs ir uzminējis visu vārdu
         if set(vārds) == uzminēts_pareizi:
