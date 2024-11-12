@@ -1,10 +1,10 @@
-word_list = [
+vārdu_saraksts = [
     'suns'
     'kaķis'
     'zivs'
     'lapa'
     'zils'
-    'zaļš'
+    'zaļš' 
     'sarkans'
     'gulēt'
     'ēst'
